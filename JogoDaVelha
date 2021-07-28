@@ -1,0 +1,151 @@
+Algoritmo "JOGO-DA-VELHA-2"
+
+Var
+Matrix:Vetor [1..3, 1..3] de caracter
+Incremento, Linha, Coluna, ContJoga, PontoJ1, PontoJ2:inteiro
+J1, J2, JogX, JogO, JogVez, Continue, Erro:caracter
+Final:Logico
+
+Procedimento Tabela()//Exibe a tabela atual no topo da tela
+Var
+PLinha, PColuna:inteiro
+Inicio
+LimpaTela
+Para PLinha <- 1 ate 3 faca
+  EscrevaL(".---.---.---.")
+  Para PColuna <- 1 ate 3 faca
+    Escreva("| ", Matrix[PLinha,PColuna]:2)
+  FimPara
+  EscrevaL("|")
+FimPara
+EscrevaL()
+EscrevaL()
+FimProcedimento
+
+Procedimento Jogada (Var CJ:inteiro; Jogador:caracter)//Jogada - Leitura da entrada e analise the validade e incremento da conta de jogadas
+Var
+PLinha, PColuna:Inteiro
+PPosicao, Erro:caracter
+Valido:Logico
+Inicio
+Repita
+  Valido <- Falso
+  Escreva("Em qual posicao o jogador [", Jogador , "] deseja jogar? ")
+  Leia(PPosicao)
+  Para PLinha <- 1 ate 3 faca
+    Para PColuna <- 1 ate 3 faca
+      Se PPosicao = Matrix[PLinha,PColuna] entao
+        Matrix[PLinha,PColuna] <- Jogador
+        Valido <- Verdadeiro
+      FimSe
+    FimPara
+  FimPara
+  Se Valido = Falso entao
+    EscrevaL()
+    Escreva("Entrada invalida. Pressione Enter para continuar")
+    Leia(Erro)
+  FimSe
+Ate Valido = Verdadeiro
+CJ <- CJ + 1
+FimProcedimento
+
+Funcao Teste(Var FContJoga:inteiro; FJog:caracter):Logico // Testa o fim do jogo e retorna valor logico
+Var
+FLinha:Inteiro
+FFinal:Logico
+Inicio
+FFInal <- Falso
+Para FLinha <- 1 ate 3 faca
+  Se (((Matrix[FLinha,1]) = (Matrix[FLinha,2])) e ((Matrix[FLinha,1]) = (Matrix[FLinha,3]))) ou (((Matrix[1,FLinha]) = (Matrix[2,FLinha])) e ((Matrix[1,FLinha]) = (Matrix[3,FLinha]))) ou (((Matrix[1,1]) = (Matrix[2,2])) e ((Matrix[1,1]) = (Matrix[3,3]))) ou (((Matrix[1,3]) = (Matrix[2,2])) e ((Matrix[1,3]) = (Matrix[3,1]))) entao
+    EscrevaL()
+    FFinal <- Verdadeiro
+    Retorne FFinal
+  FimSe
+  Se FContJoga = 10 entao
+    EscrevaL()
+    FFinal <- Verdadeiro
+    Retorne FFInal
+  FimSe
+  Retorne FFInal
+FimPara
+Limpatela
+FimFuncao
+
+Inicio
+EscrevaL("********************************")
+EscrevaL("          JOGO DA VELHA         ")
+EscrevaL("********************************")
+EscrevaL()
+Escreva("Digite o nome do 1* jogador [X]: ")
+Leia(J1)
+EscrevaL()
+Escreva("Digite o nome do 2* jogador [O]: ")
+Leia(J2)
+PontoJ1 <- 0
+PontoJ2 <- 0
+Repita
+  Incremento <- 1
+  JogX <- "X"
+  JogO <- "O"
+  ContJoga <- 1
+
+  Para Linha <- 1 ate 3 faca // Preenchimento inicial da matriz
+    Para Coluna <- 1 ate 3 faca
+      Matrix[Linha,Coluna] <- numpcarac (Incremento)
+      Incremento <- Incremento + 1
+    FimPara
+  FimPara
+  
+  Repita
+    Se (Final <> Verdadeiro) e (ContJoga < 10) entao
+      Tabela()
+      JogVez <- J1
+      Jogada(ContJoga, JogX)
+      Final <- Teste(ContJoga, JogX):Logico
+    FimSe
+    Se (Final <> Verdadeiro) e (ContJoga < 10) entao
+      Tabela()
+      JogVez <- J2
+      Jogada(ContJoga, JogO)
+      Final <- Teste(ContJoga, JogO):Logico
+    FimSe
+  Ate (Final = Verdadeiro) ou (ContJoga = 10)
+  Se Final = Verdadeiro entao
+    Tabela()
+    EscrevaL("x----------------------------------------------x")
+    EscrevaL("O jogador [", JogVez, "] e o vencedor da rodada.")
+    EscrevaL("x----------------------------------------------x")
+    Se JogVez = J1 entao
+      PontoJ1 <- PontoJ1 + 1
+    FimSe
+    Se JogVez = J2 entao
+      PontoJ2 <- PontoJ2 + 1
+    FimSe
+  FimSe
+  Se ContJoga = 10 entao
+    Tabela()
+    EscrevaL("x-------------x--------------x")
+    EscrevaL("      Ih, deu velha! [Empate] ")
+    EscrevaL("x-------------x--------------x")
+  FimSe
+  EscrevaL()
+  Repita
+    Escreva("Deseja continuar? [S/N]: ")
+    Leia(Continue)
+    Continue <- Maiusc(Continue)
+    Se (Continue <> "S") e (Continue <> "N") entao
+      EscrevaL(" Entrada invalida. Pressione Enter para continuar. ")
+      Leia(Erro)
+    FimSe
+  Ate (Continue = "S") ou (Continue = "N")
+  Final <- Falso
+Ate Continue = "N"
+Limpatela
+EscrevaL("*************************************")
+EscrevaL("           JOGO DA VELHA             ")
+EscrevaL("*************************************")
+EscrevaL()
+EscrevaL("          PONTUACAO FINAL            ")
+EscrevaL("- ", J1:7, " = ", PontoJ1)
+EscrevaL("- ", J2:7, " = ", PontoJ2)
+Fimalgoritmo
